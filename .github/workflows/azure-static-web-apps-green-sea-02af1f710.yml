@@ -30,6 +30,9 @@ jobs:
         run: |
           cd vite-project
           npm run build
+      - name: Copy dist to root
+        run: |
+          cp -r vite-project/dist/* .
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -37,10 +40,10 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_SEA_02AF1F710 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "vite-project"
+          app_location: "/" # Deploy from root
           api_location: ""
-          output_location: "dist"
-          skip_app_build: true  # THIS IS KEY - skip Azure's build
+          output_location: "" # No output location - files are already at root
+          skip_app_build: true
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
